@@ -16,3 +16,10 @@ Assets/AssetStoreTools*
 *.svd
 .DS_Store
 Thumbs.db
+
+# Allow WebGL build on Pages
+!docs/Build/
+!docs/Build/**
+!docs/TemplateData/
+!docs/TemplateData/**
+!docs/*.html
