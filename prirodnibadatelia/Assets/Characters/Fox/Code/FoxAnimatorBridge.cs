@@ -1,46 +1,33 @@
 using UnityEngine;
 
+[RequireComponent(typeof(FoxController))]
 public class FoxAnimatorBridge : MonoBehaviour
 {
-    [Header("Assign the Animator on the fox@all object")]
-    [SerializeField] private Animator animator;
+    [SerializeField] Animator anim;
+    FoxController controller;
 
-    // Animator parameter hashes (Triggers)
-    private static readonly int StepHash         = Animator.StringToHash("Step");
-    private static readonly int TurnLHash        = Animator.StringToHash("TurnL");
-    private static readonly int TurnRHash        = Animator.StringToHash("TurnR");
-    private static readonly int GrabHash         = Animator.StringToHash("Grab");
-    private static readonly int FallHash         = Animator.StringToHash("Fall");
-    private static readonly int CelebrateHash    = Animator.StringToHash("Celebrate");
-    private static readonly int ShouldersUpHash  = Animator.StringToHash("ShouldersUp");
+    static readonly int SpeedHash    = Animator.StringToHash("Speed");
+    static readonly int IsMovingHash = Animator.StringToHash("IsMoving");
+    static readonly int InteractHash = Animator.StringToHash("Interact");
+    static readonly int WinHash      = Animator.StringToHash("Win");
+    static readonly int FailHash     = Animator.StringToHash("Fail");
 
-    private void Reset()
+    void Reset() { anim = GetComponentInChildren<Animator>(); }
+
+    void Awake()
     {
-        // Auto-fill when you add the component
-        if (animator == null) animator = GetComponent<Animator>();
+        controller = GetComponent<FoxController>();
+        if (!anim) anim = GetComponentInChildren<Animator>();
     }
 
-    // ----- Public API your game can call -----
-    public void PlayIdle()               => animator.CrossFadeInFixedTime("Idle", 0.05f);
-
-    public void Step()                   => animator.SetTrigger(StepHash);
-    public void TurnLeft()               => animator.SetTrigger(TurnLHash);
-    public void TurnRight()              => animator.SetTrigger(TurnRHash);
-    public void Grab()                   => animator.SetTrigger(GrabHash);
-    public void Fall()                   => animator.SetTrigger(FallHash);
-    public void Celebrate()              => animator.SetTrigger(CelebrateHash);
-    public void ShouldersUp()            => animator.SetTrigger(ShouldersUpHash);
-
-    // Optional helpers
-    public void SetAnimSpeed(float s)    => animator.speed = s;   // e.g., speed up/down if you want
-    public void ResetAllTriggers()
+    void Update()
     {
-        animator.ResetTrigger(StepHash);
-        animator.ResetTrigger(TurnLHash);
-        animator.ResetTrigger(TurnRHash);
-        animator.ResetTrigger(GrabHash);
-        animator.ResetTrigger(FallHash);
-        animator.ResetTrigger(CelebrateHash);
-        animator.ResetTrigger(ShouldersUpHash);
+        float spd = controller?.CurrentSpeed01 ?? 0f;
+        anim.SetFloat(SpeedHash, spd);
+        anim.SetBool(IsMovingHash, spd > 0.1f);
     }
+
+    public void PlayInteract() => anim.SetTrigger(InteractHash);
+    public void PlayWin()      => anim.SetTrigger(WinHash);
+    public void PlayFail()     => anim.SetTrigger(FailHash);
 }

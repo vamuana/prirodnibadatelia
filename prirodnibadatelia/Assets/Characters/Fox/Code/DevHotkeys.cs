@@ -2,16 +2,11 @@ using UnityEngine;
 
 [RequireComponent(typeof(FoxController))]
 [RequireComponent(typeof(FoxAnimatorBridge))]
-public class FoxKeyboardDebug : MonoBehaviour
+public class DevHotkeys : MonoBehaviour
 {
-    FoxController c;
-    FoxAnimatorBridge b;
+    FoxController c; FoxAnimatorBridge b;
 
-    void Awake()
-    {
-        c = GetComponent<FoxController>();
-        b = GetComponent<FoxAnimatorBridge>();
-    }
+    void Awake(){ c = GetComponent<FoxController>(); b = GetComponent<FoxAnimatorBridge>(); }
 
     void Update()
     {
